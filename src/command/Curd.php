@@ -12,6 +12,7 @@ use think\console\Output;
 use think\Exception;
 use think\exception\ErrorException;
 use think\facade\Db;
+use think\validate\ValidateRule;
 
 class Curd extends Command
 {
@@ -57,8 +58,10 @@ class Curd extends Command
                     "modelName"=>$modelName,
                     "modelNamespace"=>$modelNamespace
                 ];
+
                 // 生成模型文件
-                $this->writeToFile('model', $data, $modelFile);
+               // $this->writeToFile('model', $data, $modelFile);
+                $this->setModelData('model', $data, $modelFile);
             }
 
             //验证类不为空
@@ -97,6 +100,30 @@ class Curd extends Command
         $output->info("Build Successed");
     }
 
+    protected function setModelData($name, $data,$pathname)
+    {
+        $stubcontent = file_get_contents($this->getStub($name));
+
+        $stubcontent = str_replace('{%modelNamespace%}', $data['modelNamespace'], $stubcontent);
+        $stubcontent = str_replace('{%modelName%}', $data['modelName'], $stubcontent);
+        $stubcontent = str_replace('{%is_delete%}', $data['is_delete'], $stubcontent);
+        $stubcontent = str_replace('{%createTime%}', $data['createTime'], $stubcontent);
+        $stubcontent = str_replace('{%updateTime%}', $data['updateTime'], $stubcontent);
+        $stubcontent = str_replace('{%primaryKey%}', $data['primaryKey'], $stubcontent);
+        if (!is_dir(dirname($pathname))) {
+            mkdir(dirname($pathname), 0755, true);
+        }
+        return file_put_contents($pathname, $stubcontent);
+    }
+
+    /**
+     * 修改验证类的
+     * @param $name
+     * @param $data
+     * @param $pathname
+     * @return false|int
+     * @throws \Symfony\Component\VarExporter\Exception\ExceptionInterface
+     */
     protected function setArrayData($name, $data,$pathname)
     {
         $stubcontent = file_get_contents($this->getStub($name));
@@ -108,6 +135,9 @@ class Curd extends Command
         $stubcontent = str_replace('{%validateName%}', $data['validateName'], $stubcontent);
         $stubcontent = str_replace('{%rule%}', $rule, $stubcontent);
         $stubcontent = str_replace('{%attributes%}', $attributes, $stubcontent);
+        if (!is_dir(dirname($pathname))) {
+            mkdir(dirname($pathname), 0755, true);
+        }
         return file_put_contents($pathname, $stubcontent);
     }
 
@@ -227,7 +257,7 @@ class Curd extends Command
         } else {
             $this->stubList[$stubname] = $stub = file_get_contents($stubname);
         }
-
+        var_dump($stub);die;
         $content = str_replace($search, $replace, $stub);
         return $content;
     }
