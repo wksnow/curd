@@ -257,7 +257,6 @@ class Curd extends Command
         } else {
             $this->stubList[$stubname] = $stub = file_get_contents($stubname);
         }
-        var_dump($stub);die;
         $content = str_replace($search, $replace, $stub);
         return $content;
     }
