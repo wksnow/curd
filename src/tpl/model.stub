@@ -21,8 +21,9 @@ class {%modelName%} extends Model
      * @param string $order
      * @param string $sort
      */
-    public function getList($where,$limit=10,$field="*",$order="{$this->primaryKey}",$sort="desc")
+    public function getList($where,$limit=10,$field="*",$order="",$sort="desc")
     {
+       $order = empty($order)?$this->primaryKey:$order;
         try {
             $list = $this->where($where)->field($field)->order($order,$sort)->paginate($limit);
         }catch (ErrorException $e)
@@ -64,8 +65,9 @@ class {%modelName%} extends Model
      * @param string $order
      * @param string $sort
      */
-    public function getListNoLimit($where,$field="*",$order="{$this->primaryKey}",$sort="desc")
+    public function getListNoLimit($where,$field="*",$order="",$sort="desc")
     {
+        $order = empty($order)?$this->primaryKey:$order;
         try {
             $list = $this->where($where)->field($field)->order($order,$sort)->select();
         }catch (ErrorException $e)
