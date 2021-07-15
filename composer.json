@@ -1,6 +1,6 @@
 {
     "name": "wksnow/curd",
-    "description": "tp6.0的curd",
+    "description": "tp6.0的curd测试版本",
     "authors": [
         {
             "name": "wangkun",
@@ -8,7 +8,9 @@
         }
     ],
     "require": {
-        "php": "7.*",
+        "php": ">=7.*",
+        "ext-json": "*",
+        "ext-curl": "*",
         "topthink/framework": "^6.0.0",
         "symfony/var-exporter": "^5.3"
     },
@@ -17,7 +19,7 @@
             "curd\\": "src/"
         },
         "files": [
-            "crud/helper.php"
+            "src/helper.php"
         ]
     }
 }
