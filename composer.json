@@ -1,0 +1,23 @@
+{
+    "name": "wksnow/curd",
+    "description": "tp6.0的curd",
+    "authors": [
+        {
+            "name": "wangkun",
+            "email": "384452790@qq.com"
+        }
+    ],
+    "require": {
+        "php": "7.*",
+        "topthink/framework": "^6.0.0",
+        "symfony/var-exporter": "^5.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "curd\\": "src/"
+        },
+        "files": [
+            "crud/helper.php"
+        ]
+    }
+}

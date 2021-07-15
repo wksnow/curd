@@ -1,0 +1,143 @@
+<?php
+
+namespace {%modelNamespace%};
+
+use think\Model;
+use think\exception\ErrorException;
+
+class {%modelName%} extends Model
+{
+
+    public $delData=["{%is_delete%}"=>2];
+    public $createTime = "{%createTime%}";
+    public $updateTime = "{%updateTime%}";
+    public $primaryKey = "{%primaryKey%}";
+
+/**
+     * 带分页的列表
+     * @param $where
+     * @param $limit
+     * @param string $field
+     * @param string $order
+     * @param string $sort
+     */
+    public function getList($where,$limit=10,$field="*",$order="{$this->primaryKey}",$sort="desc")
+    {
+        try {
+            $list = $this->where($where)->field($field)->order($order,$sort)->paginate($limit);
+        }catch (ErrorException $e)
+        {
+            return dataReturn(-1,$e->getMessage());
+        }
+        if($list){
+            return dataReturn(0,"查询成功",$list);
+        }else{
+            return dataReturn(-2,"不存在数据");
+        }
+    }
+
+    /**
+     * 查询详情
+     * @param $where
+     * @param string $field
+     */
+    public function detail($where,$field="*")
+    {
+        try {
+            $list = $this->where($where)->field($field)->find();
+        }catch (ErrorException $e)
+        {
+            return dataReturn(-1,$e->getMessage());
+        }
+        if($list){
+            return dataReturn(0,"查询成功",$list);
+        }else{
+            return dataReturn(-2,"不存在数据");
+        }
+
+    }
+
+    /**
+     * 没有分页的列表
+     * @param $where
+     * @param string $field
+     * @param string $order
+     * @param string $sort
+     */
+    public function getListNoLimit($where,$field="*",$order="{$this->primaryKey}",$sort="desc")
+    {
+        try {
+            $list = $this->where($where)->field($field)->order($order,$sort)->select();
+        }catch (ErrorException $e)
+        {
+            return dataReturn(-1,$e->getMessage());
+        }
+        if($list){
+            return dataReturn(0,"查询成功",$list);
+        }else{
+            return dataReturn(-2,"不存在数据");
+        }
+    }
+
+    /**
+     * 插入数据
+     * @param $param
+     */
+    public function addParam($param)
+    {
+        try {
+            $param["{$this->createTime}"] = date("Y-m-d H:i:s");
+            $id = $this->insertGetId($param);
+        }catch (ErrorException $e)
+        {
+            return dataReturn(-1,$e->getMessage());
+        }
+        return dataReturn(0,"操作成功",$id);
+
+    }
+
+    /**
+     * 更新数据
+     */
+    public function updateParam($where,$param)
+    {
+        try {
+            $param["{$this->updateTime}"]=date("Y-m-d H:i:s");
+            $this->where($where)->update($param);
+        }catch (ErrorException $e){
+            return dataReturn(-1,$e->getMessage());
+        }
+        return dataReturn(0,"操作成功");
+    }
+
+
+    /**
+     * @param $where
+     * @return array
+     */
+    public function softDel($where): array
+        {
+        try{
+            $res =  $this->where($where)->update($this->delData);
+        }catch(ErrorException $e){
+            return dataReturn(-1,$e->getMessage());
+        }
+        return dataReturn(0,"操作成功");
+    }
+
+    /**
+     * @param $where
+     * @return array
+     */
+    public function delParam($where): array
+    {
+        try{
+             $this->where($where)->delete();
+        }catch(ErrorException $e){
+            return dataReturn(-1,$e->getMessage());
+        }
+        return dataReturn(0,"操作成功");
+    }
+
+
+}

@@ -1,0 +1,19 @@
+<?php
+
+namespace {%validateNamespace%};
+
+use helper\ExtendValidate;
+
+class {%validateName%} extends ExtendValidate
+{
+
+    protected $rule={%rule%};
+
+    protected $attributes={%attributes%};
+
+    protected $scene=[];
+
+
+
+
+}
